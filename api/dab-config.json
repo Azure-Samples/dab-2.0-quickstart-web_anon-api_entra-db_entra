@@ -15,19 +15,23 @@
       "path": "/graphql",
       "allow-introspection": true
     },
+    "mcp": {
+      "enabled": true,
+      "path": "/mcp"
+    },
     "host": {
       "cors": {
         "origins": [
           "http://localhost:5173",
-          "https://web-app-202602181630.salmonwater-3a730595.eastus2.azurecontainerapps.io"
+          "__WEB_URL_AZURE__"
         ],
         "allow-credentials": false
       },
       "authentication": {
         "provider": "EntraId",
         "jwt": {
-          "audience": "053292c1-4777-443f-bd8b-ca313ae971d1",
-          "issuer": "https://login.microsoftonline.com/eaf341ca-58d3-4d02-93c3-787dfe8e154f/v2.0"
+          "audience": "__AUDIENCE__",
+          "issuer": "__ISSUER__"
         }
       },
       "mode": "development"
