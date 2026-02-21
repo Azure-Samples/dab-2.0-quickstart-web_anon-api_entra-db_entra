@@ -92,7 +92,7 @@ if ($isAzd) {
 # ── 2. Update dab-config.json with real auth values ──
 
 Write-Host "Updating DAB config with EntraId auth..." -ForegroundColor Yellow
-Push-Location "$repoRoot/api"
+Push-Location "$repoRoot/data-api"
 dab configure `
     --runtime.host.authentication.provider "EntraId" `
     --runtime.host.authentication.jwt.audience "$($app.appId)" `
@@ -120,9 +120,9 @@ Write-Host "Environment written to .azure-env" -ForegroundColor Green
 
 # ── 4. Verify config files were updated ──
 
-$dabConfigContent = Get-Content "$repoRoot/api/dab-config.json" -Raw
+$dabConfigContent = Get-Content "$repoRoot/data-api/dab-config.json" -Raw
 if ($dabConfigContent -match '__AUDIENCE__|__ISSUER__') {
-    Write-Host "✗ api/dab-config.json still contains placeholders" -ForegroundColor Red
+    Write-Host "✗ data-api/dab-config.json still contains placeholders" -ForegroundColor Red
     exit 1
 }
 Write-Host "✓ DAB config verified" -ForegroundColor Green

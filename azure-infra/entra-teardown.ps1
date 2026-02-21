@@ -35,7 +35,7 @@ if ($app) {
 
 Write-Host "Resetting DAB config..." -ForegroundColor Yellow
 
-Push-Location "$repoRoot/api"
+Push-Location "$repoRoot/data-api"
 dab configure `
     --runtime.host.authentication.provider "EntraId" `
     --runtime.host.authentication.jwt.audience "__AUDIENCE__" `
