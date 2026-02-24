@@ -168,6 +168,41 @@ Write-Host "Inspector updated" -ForegroundColor Green
 $configContent | Out-File -FilePath "web-app/config.js" -Encoding utf8 -Force
 Write-Host "Local config.js updated" -ForegroundColor Green
 
+# ── 13. Upsert repo-level MCP server entry for quickstart3 ──
+
+$repoRoot = (Resolve-Path "$PSScriptRoot/../..").Path
+$githubDir = Join-Path $repoRoot ".github"
+$mcpConfigFile = Join-Path $githubDir "mcp.json"
+$mcpServerName = "azure-sql-mcp-qs3"
+$mcpServerUrl = "https://$dabFqdn/mcp"
+
+if (-not (Test-Path $githubDir)) {
+    New-Item -Path $githubDir -ItemType Directory -Force | Out-Null
+}
+
+if (Test-Path $mcpConfigFile) {
+    $mcpConfigRaw = Get-Content $mcpConfigFile -Raw
+    if ([string]::IsNullOrWhiteSpace($mcpConfigRaw)) {
+        $mcpConfig = @{}
+    } else {
+        $mcpConfig = $mcpConfigRaw | ConvertFrom-Json -AsHashtable
+    }
+} else {
+    $mcpConfig = @{}
+}
+
+if (-not $mcpConfig.ContainsKey('servers') -or $null -eq $mcpConfig['servers']) {
+    $mcpConfig['servers'] = @{}
+}
+
+$mcpConfig['servers'][$mcpServerName] = @{
+    url = $mcpServerUrl
+    type = 'http'
+}
+
+$mcpConfig | ConvertTo-Json -Depth 100 | Out-File -FilePath $mcpConfigFile -Encoding utf8 -Force
+Write-Host "MCP config updated: $mcpServerName -> $mcpServerUrl" -ForegroundColor Green
+
 # ── Summary ──
 
 # Append Azure URLs and connection string to .azure-env

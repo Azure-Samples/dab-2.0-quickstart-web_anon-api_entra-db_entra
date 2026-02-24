@@ -76,11 +76,10 @@ The web app loads anonymously. There is no login — the user experience is iden
 ## Deploy to Azure
 
 ```bash
-azd auth login
-azd up
+pwsh ./azure-infra/azure-up.ps1
 ```
 
-The `preprovision` hook runs `entra-setup.ps1` automatically. After teardown, `azd down` runs `entra-teardown.ps1` to delete the app registration.
+The `preprovision` hook runs `entra-setup.ps1` automatically. During teardown via `azure-down.ps1`, the `postdown` hook runs `entra-teardown.ps1` to delete the app registration.
 
 ## What Changed from Quickstart 2
 
@@ -88,8 +87,14 @@ The `preprovision` hook runs `entra-setup.ps1` automatically. After teardown, `a
 |------|--------|
 | `api/dab-config.json` | Adds EntraId auth provider with audience/issuer; `anonymous` role |
 | `Aspire.AppHost/Demo.cs` | Checks for Entra placeholders in dab-config, guides setup |
-| `azure/entra-setup.ps1` | Creates app registration + API scope |
-| `azure/entra-teardown.ps1` | Deletes app registration on `azd down` |
+| `azure-infra/entra-setup.ps1` | Creates app registration + API scope |
+| `azure-infra/entra-teardown.ps1` | Deletes app registration on `azure-down` |
+
+To tear down resources:
+
+```bash
+pwsh ./azure-infra/azure-down.ps1
+```
 
 > The web files (`index.html`, `app.js`, `dab.js`, `config.js`) are identical to Quickstart 2. No MSAL, no login, no bearer tokens.
 
